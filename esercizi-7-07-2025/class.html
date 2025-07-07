@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Esercitazione sulle classi</title>
+</head>
+<body>
+  <h2>Aggiungi un animale domestico</h2>
+
+  <!--Form per inserire i dati del Pet-->
+  <form id="petForm">
+    <input type="text" placeholder="Nome animale" id="petName" required><br>
+    <input type="text" placeholder="Nome proprietario" id="ownerName" required><br>
+    <input type="text" placeholder="Specie (es. cane, gatto)" id="species" required><br>
+    <input type="text" placeholder="Razza (es. labrador)" id="breed" required><br>
+    <button type="submit">Aggiungi un animale</button>
+  </form>
+  <h3>Lista Animali</h3>
+  <ul id="petList"></ul>
+
+<script>
+
+  //definizione della classe Pet
+  class Pet {
+    constructor(petName, ownerName, species, breed) {
+    this.petName = petName;
+    this.ownerName = ownerName;
+    this.species = species;
+    this.breed = breed;
+  }
+
+  //metodo per verificare se due animali hanno lo stesso proprietario
+    hasSameOwner(otherPet) {
+      return this.ownerName.toLowerCase() === otherPet.ownerName.toLowerCase();
+    }
+  }
+  const pets = [];
+
+  //gestore dell'evento submit del form
+    document.getElementById('petForm').addEventListener('submit', function(event) {
+
+  //previene il refresh della pagina
+    event.preventDefault();
+
+  //recupera i valori inseriti nei campi del form
+    const petName = document.getElementById('petName').value;
+    const ownerName = document.getElementById('ownerName').value;
+    const species = document.getElementById('species').value;
+    const breed = document.getElementById('breed').value;
+
+  //crea un nuovo oggetto Pet
+    const newPet = new Pet(petName, ownerName, species, breed);
+
+  //aggiunge l'oggetto all'array
+    pets.push(newPet);
+
+  //aggiorna la visualizzazione della lista degli animali
+    updatePetList();
+
+  //reset del form dopo l'invio
+    this.reset();
+  });
+
+  //funzione per aggiornare la lista HTML con gli animali
+    function updatePetList() {
+    const list = document.getElementById('petList');
+
+    //pulisce la lista prima di riempirla
+    list.innerHTML = '';
+
+    pets.forEach((pet, index) => {
+    const li = document.createElement('li');
+    li.textContent = `${pet.petName} (${pet.species}, ${pet.breed}) - Proprietario: ${pet.ownerName}`;
+
+  //confronto con altri animali se hanno lo stesso proprietario 
+    pets.forEach((otherPet, i) => {
+      if (i !== index && pet.hasSameOwner(otherPet)) {
+    const sameOwner = document.createElement('div');
+    sameOwner.style.color = 'green';
+    sameOwner.textContent = `➡ Condivide il proprietario con ${otherPet.petName}`;
+    li.appendChild(sameOwner);
+    }
+  });
+  
+  //aggiunge l'elemento alla lista visualizzata
+    list.appendChild(li);
+  });
+  }
+
+  </script>
+  <script src="./class.js"></script>
+</body>
+</html>
